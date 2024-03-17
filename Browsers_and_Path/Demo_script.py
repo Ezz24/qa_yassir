@@ -7,14 +7,12 @@ import random
 import string
 
 def generate_random_email(domain='example.com', length=10):
-    """Generate a random email address and username."""
     letters = string.ascii_lowercase
     random_string = ''.join(random.choice(letters) for i in range(length))
     full_email = random_string + '@' + domain
     username = random_string
     return full_email, username
 
-# Generate a unique email and username for registration
 random_email, random_username = generate_random_email(domain='test.com')
 
 driver = webdriver.Chrome()
@@ -71,7 +69,6 @@ try:
     assert "Log out" in logout_link.text, "Log out link was not found after registration."
     print("Test Case #2 (Registration): Passed")
 
-    # Click on the logout link
     logout_link.click()
 
     # Log in with the new user credentials
@@ -81,42 +78,33 @@ try:
     password_field = driver.find_element(By.ID, "password")
     password_field.send_keys("Admin@1234")
 
-    # Click the login button
     login_button = driver.find_element(By.XPATH, '//*[@id="customer_login"]/div[1]/form/p[3]/button')
     login_button.click()
 
-    # Assert on the logout link again to verify that login was successful
     logout_link = WebDriverWait(driver, 20).until(
         EC.visibility_of_element_located((By.XPATH, '//*[@id="post-9"]/div/div/div/p[1]/a'))
     )
     assert "Log out" in logout_link.text, "Log out link was not found after re-login."
     print("Test Case #3 (Login with Registered User): Passed")
 
-    # Test Case #4 (Add to Cart and Verify Cart)
-    # Navigate to Home
     home_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, '//*[@id="site-navigation"]/div[1]/ul/li[1]/a'))
     )
     home_button.click()
 
-    # Add to Cart from the list of items
     add_to_cart_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, '//*[@id="main"]/ul/li[1]/a[2]'))
     )
     add_to_cart_button.click()
 
-    # Wait for the 'View Cart' button to be visible
     view_cart_button = WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located((By.XPATH, '//*[@id="main"]/ul/li[1]/a[3]'))
     )
 
-    # Assert 'View Cart' button is visible
     assert view_cart_button.is_displayed(), "View Cart button is not displayed after adding to cart."
 
-    # Navigate to Cart to confirm the item was added
     view_cart_button.click()
 
-    # Assert the presence of 'Apply Coupon' button in the cart
     apply_coupon_button = WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located((By.NAME, 'apply_coupon'))
     )
